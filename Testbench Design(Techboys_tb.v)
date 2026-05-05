@@ -1,0 +1,71 @@
+`timescale 1ns/1ps
+module Techboys_4bit_tb();
+    reg clk;
+    reg reset;
+    reg write_en;
+    reg [1:0] w_addr;
+    reg [3:0] w_data;
+    reg [1:0] r_addr1;
+    reg [1:0] r_addr2;
+    wire [3:0] r_data1;
+    wire [3:0] r_data2;
+
+    Techboys_4bit uut(
+        .clk(clk),
+        .reset(reset),
+        .write_en(write_en),
+        .w_addr(w_addr),
+        .w_data(w_data),
+        .r_addr1(r_addr1),
+        .r_addr2(r_addr2),
+        .r_data1(r_data1),
+        .r_data2(r_data2)
+    );
+
+    always #5 clk = ~clk;
+
+    initial begin
+        clk = 0;
+        reset = 1;
+        write_en = 0;
+        w_addr = 0;
+        w_data = 0;
+        r_addr1 = 0;
+        r_addr2 = 0;
+
+        #10 reset = 0;
+
+        @(posedge clk);
+        write_en = 1;
+        w_addr = 2'b00;
+        w_data = 4'hA;
+
+        @(posedge clk);
+        w_addr = 2'b01;
+        w_data = 4'h5;
+
+        @(posedge clk);
+        write_en = 0;
+        r_addr1 = 2'b00;
+        r_addr2 = 2'b01;
+
+        #5;
+        $display("port1:%h, port2:%h", r_data1, r_data2);
+
+        @(posedge clk);
+        write_en = 1;
+        w_addr = 2'b11;
+        w_data = 4'hF;
+
+        @(posedge clk);
+        write_en = 0;
+        r_addr1 = 2'b11;
+
+        #5;
+        $display("port1(reg3):%h", r_data1);
+
+        #20;
+        $finish;
+    end
+endmodule
+
