@@ -1,0 +1,10 @@
+# Cadence/Verilog temporary files
+INCA_libs/
+waves.shm/
+*.log
+*.history
+*.key
+*.diag
+xrun.history
+simv*
+csrc/
